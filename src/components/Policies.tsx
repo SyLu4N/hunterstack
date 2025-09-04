@@ -17,6 +17,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from './ui/breadcrumb';
+import { useSidebar } from './ui/sidebar';
 import { Skeleton } from './ui/skeleton';
 
 interface Props {
@@ -24,10 +25,17 @@ interface Props {
 }
 
 export function Policies({ props }: Props) {
+  const { isMobile, setOpenMobile } = useSidebar();
   const { data, isLoading, refetch } = usePolicies(props);
 
   const policies = data?.policies || [];
   const totalCount = data?.totalCount || 0;
+
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, []);
 
   useEffect(() => {
     refetch();
