@@ -23,6 +23,7 @@ export function usePolicy(slug: string): QueryProps {
   return useQuery({
     queryKey: ['policy', slug],
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     staleTime: STALE_TIME_24HRS_QUERY,
 
     queryFn: async () => {

@@ -60,6 +60,7 @@ export function usePolicies(
   return useQuery({
     queryKey: ['policies', ...arrayKey],
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     staleTime: STALE_TIME_24HRS_QUERY,
 
     queryFn: async () => {

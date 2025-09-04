@@ -28,6 +28,7 @@ export function useCategories(page = 1): QueryProps {
   return useQuery({
     queryKey: ['categories', String(page)],
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     staleTime: STALE_TIME_24HRS_QUERY,
 
     queryFn: async () => {

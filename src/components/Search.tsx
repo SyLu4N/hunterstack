@@ -24,6 +24,7 @@ export function Search({ q }: Props) {
 
   const debouncedValue = useDebounce(value, 500);
   const containerRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useClickOutside(containerRef, () => setOpen(false));
 
@@ -33,8 +34,17 @@ export function Search({ q }: Props) {
   );
 
   useEffect(() => {
-    if (data && data?.policies?.length > 0) setOpen(true);
-    else setOpen(false);
+    setOpen(false);
+  }, []);
+
+  useEffect(() => {
+    if (
+      data &&
+      document.activeElement === inputRef.current &&
+      data?.policies?.length > 0
+    ) {
+      setOpen(true);
+    } else setOpen(false);
   }, [data]);
 
   function activeFilterPolicys(e: FormEvent<HTMLFormElement>) {
@@ -42,6 +52,7 @@ export function Search({ q }: Props) {
 
     if (debouncedValue) {
       setOpen(false);
+      inputRef.current?.blur();
       return rout.push(`/search?q=${debouncedValue}`);
     }
   }
@@ -54,6 +65,7 @@ export function Search({ q }: Props) {
       aria-label="search-form"
     >
       <input
+        ref={inputRef}
         type="text"
         placeholder="Buscar pelo tema"
         className={`text-letter-300 z-20 w-full p-4 px-6 pl-12 transition-all ${open ? 'rounded-t-3xl' : 'rounded-3xl'} outline-none bg-background-700 focus:shadow-xl`}
