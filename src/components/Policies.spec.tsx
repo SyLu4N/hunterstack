@@ -6,6 +6,13 @@ import { Policies } from './Policies';
 
 vi.mock('@/hooks/usePolicies');
 
+vi.mock('./ui/sidebar', () => ({
+  useSidebar: () => ({
+    isMobile: false,
+    setOpenMobile: vi.fn(),
+  }),
+}));
+
 describe('Policies', () => {
   const fakePolicies = [
     {

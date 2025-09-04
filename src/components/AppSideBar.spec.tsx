@@ -10,6 +10,10 @@ import { SidebarProvider } from './ui/sidebar';
 
 vi.mock('@/hooks/useCategories');
 
+vi.mock('@/hooks/useFavorites', () => ({
+  useFavorites: () => ({ favorites: [] }),
+}));
+
 export function renderWithSidebar(ui: ReactNode) {
   return render(<SidebarProvider>{ui}</SidebarProvider>);
 }
@@ -63,7 +67,7 @@ describe('AppSidebar', () => {
 
   it('Mostra "Ver mais..." quando há mais categorias', async () => {
     (useCategories as any).mockReturnValue({
-      data: { categories: fakeCategories, totalCount: 13 },
+      data: { categories: fakeCategories, totalCount: 15 },
       isLoading: false,
       isFetching: false,
     });

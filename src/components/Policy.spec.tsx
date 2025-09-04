@@ -6,7 +6,14 @@ import { Policy } from './Policy';
 
 vi.mock('@/hooks/usePolicy');
 
-describe('Policy component', () => {
+vi.mock('@/hooks/useFavorites', () => ({
+  useFavorites: () => ({
+    favorites: [],
+    toggleFavorite: vi.fn(),
+  }),
+}));
+
+describe('PolicyTest', () => {
   const fakePolicy = {
     title: 'Política de Privacidade',
     category: { slug: 'privacidade', name: 'Privacidade' },

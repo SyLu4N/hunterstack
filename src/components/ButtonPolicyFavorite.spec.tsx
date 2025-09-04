@@ -1,16 +1,29 @@
-import * as favoritesStorage from '@/localStorage/favorites';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
+import { useEffect } from 'react'; // ← Adicionar esta importação
+
+import { useFavorites } from '@/hooks/useFavorites';
+import { fireEvent, render, cleanup } from '@testing-library/react';
+import { Mock, vi } from 'vitest';
 
 import { ButtonPolicyFavorite } from './ButtonPolicyFavorite';
 
+const fakePolicy = { slug: 'fake-policy', title: 'Política Fake' } as any;
+
+vi.mock('@/hooks/useFavorites');
 vi.mock('use-sound', () => ({
-  default: () => [vi.fn()],
+  default: () => [vi.fn(), { stop: vi.fn() }], // ← Mock corrigido
 }));
 
-vi.mock('@lottiefiles/dotlottie-react', () => {
-  return {
-    DotLottieReact: ({ dotLottieRefCallback }: any) => {
+vi.mock('./ui/button', () => ({
+  Button: ({ onClick, children }: any) => (
+    <button onClick={onClick} data-testid="mock-button">
+      {children}
+    </button>
+  ),
+}));
+
+vi.mock('@lottiefiles/dotlottie-react', () => ({
+  DotLottieReact: vi.fn().mockImplementation(({ dotLottieRefCallback }) => {
+    useEffect(() => {
       const mockPlayer = {
         play: vi.fn(),
         stop: vi.fn(),
@@ -19,48 +32,55 @@ vi.mock('@lottiefiles/dotlottie-react', () => {
         totalFrames: 10,
       };
       dotLottieRefCallback(mockPlayer);
-      return <div data-testid="dotlottie" />;
-    },
-  };
-});
+
+      return () => {
+        dotLottieRefCallback(null);
+      };
+    }, []);
+
+    return null;
+  }),
+}));
 
 describe('ButtonPolicyFavorite', () => {
-  const fakePolicy = { slug: 'fake-policy', title: 'Política Fake' } as any;
+  const setFavorites = vi.fn();
 
   beforeEach(() => {
-    vi.spyOn(favoritesStorage, 'fetchFavorites').mockReturnValue([]);
-    vi.spyOn(favoritesStorage, 'setFavorites').mockImplementation(vi.fn());
-    vi.spyOn(favoritesStorage, 'removeFavorites').mockImplementation(vi.fn());
+    setFavorites.mockClear();
+    (useFavorites as Mock).mockReturnValue({
+      favorites: [],
+      setFavorites,
+    });
   });
 
-  it('Renderiza o botão', () => {
-    render(<ButtonPolicyFavorite policy={fakePolicy} />);
-    expect(screen.getByRole('button')).toBeInTheDocument();
-    expect(screen.getByTestId('dotlottie')).toBeInTheDocument();
+  afterEach(() => {
+    cleanup(); // ← Limpa após cada teste
+    vi.clearAllMocks();
   });
 
-  // ---
-
-  it('Adiciona aos favoritos se não estiver favoritado', () => {
-    render(<ButtonPolicyFavorite policy={fakePolicy} />);
-    const button = screen.getByRole('button');
-
-    fireEvent.click(button);
-
-    expect(favoritesStorage.setFavorites).toHaveBeenCalledWith(fakePolicy);
+  afterAll(() => {
+    vi.resetAllMocks(); // ← Reseta todos os mocks após todos os testes
   });
-  // ---
 
-  it('Remove dos favoritos se já estiver favoritado', () => {
-    vi.spyOn(favoritesStorage, 'fetchFavorites').mockReturnValue([fakePolicy]);
-
-    render(<ButtonPolicyFavorite policy={fakePolicy} />);
-    const button = screen.getByRole('button');
-
-    fireEvent.click(button);
-
-    expect(favoritesStorage.removeFavorites).toHaveBeenCalledWith(
-      fakePolicy.slug,
+  it('Adiciona aos favoritos', () => {
+    const { getByTestId } = render(
+      <ButtonPolicyFavorite policy={fakePolicy} />,
     );
+    fireEvent.click(getByTestId('mock-button'));
+    expect(setFavorites).toHaveBeenCalledWith([fakePolicy]);
+  });
+
+  // ---
+
+  it('Remove dos favoritos', () => {
+    (useFavorites as Mock).mockReturnValue({
+      favorites: [fakePolicy],
+      setFavorites,
+    });
+    const { getByTestId } = render(
+      <ButtonPolicyFavorite policy={fakePolicy} />,
+    );
+    fireEvent.click(getByTestId('mock-button'));
+    expect(setFavorites).toHaveBeenCalledWith([]);
   });
 });
