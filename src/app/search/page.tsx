@@ -1,5 +1,6 @@
 import { Policies } from '@/components/Policies';
 import { Search as SearchComponent } from '@/components/Search';
+import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
 import { getPolicies } from '@/hooks/usePolicies';
 import { createValueArrayFromProps } from '@/utils/createValueArrayFromProps';
 import {
@@ -28,11 +29,12 @@ export default async function Search({ searchParams }: Props) {
   await queryClient.prefetchQuery({
     queryKey: ['policies', ...arrayKey],
     queryFn: async () => getPolicies(props),
+    staleTime: STALE_TIME_24HRS_QUERY,
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <SearchComponent />
+      <SearchComponent q={searchParams.q} />
 
       <Policies props={props} />
     </HydrationBoundary>

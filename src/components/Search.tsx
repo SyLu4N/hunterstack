@@ -12,11 +12,15 @@ import {
 } from '@/utils/extractHighlightFromPolicy';
 import { useRouter } from 'next/navigation';
 
-export function Search() {
+interface Props {
+  q?: string;
+}
+
+export function Search({ q }: Props) {
   const rout = useRouter();
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(q || '');
 
   const debouncedValue = useDebounce(value, 500);
   const containerRef = useRef<HTMLFormElement>(null);

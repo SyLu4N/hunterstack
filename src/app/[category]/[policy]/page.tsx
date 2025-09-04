@@ -1,4 +1,5 @@
 import { Policy } from '@/components/Policy';
+import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
 import { getPolicy } from '@/hooks/usePolicy';
 import {
   dehydrate,
@@ -18,6 +19,8 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const policy = await getPolicy(params.policy);
+
+  if (!policy) return {};
 
   const previousKeywords = (await parent).keywords || [];
 
@@ -46,6 +49,7 @@ export default async function Category({ params }: Props) {
   await queryClient.prefetchQuery({
     queryKey: ['policy', policy],
     queryFn: async () => getPolicy(policy),
+    staleTime: STALE_TIME_24HRS_QUERY,
   });
 
   return (

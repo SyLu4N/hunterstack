@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import { AppSidebar } from '@/components/AppSideBar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
 import { getCategories } from '@/hooks/useCategories';
 import {
   dehydrate,
@@ -59,6 +60,7 @@ export default async function RootLayout({
   await queryClient.prefetchQuery({
     queryKey: ['categories', '1'],
     queryFn: async () => getCategories(),
+    staleTime: STALE_TIME_24HRS_QUERY,
   });
 
   return (

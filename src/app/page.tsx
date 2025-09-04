@@ -1,5 +1,6 @@
 import { Policies } from '@/components/Policies';
 import { Search } from '@/components/Search';
+import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
 import { getPolicies } from '@/hooks/usePolicies';
 import { createValueArrayFromProps } from '@/utils/createValueArrayFromProps';
 import {
@@ -20,6 +21,7 @@ export default async function Home({ searchParams }: Props) {
   await queryClient.prefetchQuery({
     queryKey: ['policies', ...arrayKey],
     queryFn: async () => getPolicies({ page }),
+    staleTime: STALE_TIME_24HRS_QUERY,
   });
 
   return (

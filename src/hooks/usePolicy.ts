@@ -15,7 +15,7 @@ type QueryProps = {
 export async function getPolicy(slug: string) {
   const api = apiServer();
 
-  const { data } = await api.get<Policy>(`/policies/${slug}`);
+  const { data } = await api.get<Policy>(`/policy/${slug}`);
   return data;
 }
 
