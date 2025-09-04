@@ -24,7 +24,7 @@ export function ButtonPolicyExport({ policy }: Props) {
     const isLoadingToast = toast.loading('Exportando política...');
 
     try {
-      const response = await api.get(`/export/policy/${policy?.slug}`, {
+      const response = await api.get(`/scraping/policy/${policy?.slug}/pdf`, {
         responseType: 'blob',
       });
 
