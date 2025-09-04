@@ -79,6 +79,8 @@ export function usePolicies(
           },
           duration: 5000,
         });
+
+        return { policies: [], totalCount: 0 };
       }
     },
 

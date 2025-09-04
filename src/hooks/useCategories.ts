@@ -47,6 +47,8 @@ export function useCategories(page = 1): QueryProps {
           },
           duration: 5000,
         });
+
+        return { categories: [], totalCount: 0 };
       }
     },
   });
