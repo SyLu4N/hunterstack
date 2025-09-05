@@ -1,11 +1,8 @@
 import { Policy } from '@/components/Policy';
 import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
 import { getPolicy } from '@/hooks/usePolicy';
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { queryClient } from '@/services/queryClient';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { Metadata, ResolvingMetadata } from 'next';
 
 interface Props {
@@ -42,8 +39,6 @@ export async function generateMetadata(
 }
 
 export default async function Category({ params }: Props) {
-  const queryClient = new QueryClient();
-
   const policy = String(params.policy);
 
   await queryClient.prefetchQuery({
