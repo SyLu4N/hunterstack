@@ -15,9 +15,9 @@ Demonstração resumida do projeto:
 ✅ Armazenamento das políticas categorizadas em uma base de dados (PostgreSQL)  
 ✅ Disponibilização de API para consulta (Fastify)  
 ✅ Dashboard com filtros, buscas e categorização (Next.js)  
-✅ Opção de exportar uma política como PDF 
-✅ Otimização de SEO do site  
-✅ Testes de front-end dos componentes 
+✅ Opção de exportar uma política como PDF  
+✅ Otimização de SEO do site <br/>
+✅ Testes de front-end dos componentes
 
 ## Deploy
 
