@@ -1,15 +1,13 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 
 import { Policy } from '@/@types/Policy';
 import { useFavorites } from '@/hooks/useFavorites';
-import { DotLottie, DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { useLottie } from 'lottie-react';
 import useSound from 'use-sound';
 
 import { Button } from './ui/button';
 
-import heart from '/public/lottie/heart.lottie';
+import heart from '/public/lottie/heart.json';
 
 interface Props {
   policy?: Policy | null;
@@ -18,62 +16,53 @@ interface Props {
 export function ButtonPolicyFavorite({ policy }: Props) {
   const { favorites, setFavorites } = useFavorites();
 
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [dotLottie, setDotLottie] = useState<null | DotLottie>(null);
+  const [isFavorite, setIsFavirote] = useState(false);
 
   const [playOn] = useSound('/sounds/teste.wav');
 
-  function handleFavoritePolicy() {
-    if (!policy || !dotLottie) return;
+  const options = {
+    animationData: heart,
+    loop: false,
+    autoplay: false,
+  };
 
-    const newFavorites = [...favorites];
+  const { View, play, goToAndStop, playSegments } = useLottie(options);
 
-    if (dotLottie.isPlaying) dotLottie.stop();
+  function handleFavorite() {
+    if (isFavorite) {
+      goToAndStop(0);
 
-    if (favorites.some((favorite) => favorite.slug === policy.slug)) {
-      const updatedFavorites = newFavorites.filter(
-        (favorite) => favorite.slug !== policy.slug,
+      const newFavorites = favorites.filter(
+        (favorite) => favorite.slug !== policy?.slug,
       );
 
-      dotLottie.setFrame(0);
-
-      setFavorites(updatedFavorites);
+      setFavorites(newFavorites);
+      setIsFavirote(false);
     } else {
-      newFavorites.push(policy);
-
-      dotLottie.play();
+      play();
       playOn();
 
-      setFavorites(newFavorites);
+      setFavorites([...favorites, policy!]);
+      setIsFavirote(true);
     }
   }
 
   useEffect(() => {
-    if (!policy || !dotLottie) return;
+    if (!policy) return;
 
-    const newFavorites = favorites;
-
-    if (newFavorites.some((favorite) => favorite.slug === policy.slug)) {
-      console.log(dotLottie.totalFrames);
-      if (dotLottie.totalFrames) {
-        dotLottie.setFrame(dotLottie.totalFrames - 1);
-      }
-
-      setIsFavorite(true);
+    if (favorites.some((favorite) => favorite.slug === policy.slug)) {
+      playSegments([59, 59]);
+      setIsFavirote(true);
     }
-  }, [policy, dotLottie]);
+  }, [policy, favorites]);
 
   return (
     <Button
       type="button"
+      onClick={handleFavorite}
       className="flex items-center justify-center !w-8 !h-8 sm:!w-10 sm:!h-10 p-0 bg-white place-items-center rounded-md"
-      onClick={handleFavoritePolicy}
-      title={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
     >
-      <DotLottieReact
-        src={heart}
-        dotLottieRefCallback={(e) => setDotLottie(e)}
-      />
+      {View}
     </Button>
   );
 }

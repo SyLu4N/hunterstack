@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-
 import { Policy } from '@/components/Policy';
 import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
 import { getPolicy } from '@/hooks/usePolicy';
@@ -56,9 +54,7 @@ export default async function Category({ params }: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense>
-        <Policy slug={policy} />
-      </Suspense>
+      <Policy slug={policy} />
     </HydrationBoundary>
   );
 }

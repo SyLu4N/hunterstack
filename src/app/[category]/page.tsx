@@ -1,7 +1,4 @@
-import { Suspense } from 'react';
-
 import { Policies } from '@/components/Policies';
-import { PoliciesLoading } from '@/components/PoliciesLoading';
 import { Search } from '@/components/Search';
 import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
 import { getPolicies } from '@/hooks/usePolicies';
@@ -35,9 +32,7 @@ export default async function Category({ searchParams, params }: Props) {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Search />
 
-      <Suspense fallback={<PoliciesLoading />}>
-        <Policies props={{ page, category }} />
-      </Suspense>
+      <Policies props={{ page, category }} />
     </HydrationBoundary>
   );
 }
