@@ -89,7 +89,6 @@ describe('AppSidebar', () => {
 
     renderWithSidebar(<AppSidebar />);
 
-    // Simula o clique no botão que altera as categorias
     await userEvent.click(screen.getByText(/ver mais/i));
 
     await waitFor(() => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Policy } from '@/@types/Policy';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -28,9 +28,11 @@ export function ButtonPolicyFavorite({ policy }: Props) {
 
   const { View, play, goToAndStop, animationItem } = useLottie(options);
 
+  const initialRef = useRef(false);
+
   function handleFavorite() {
     if (isFavorite) {
-      goToAndStop(0);
+      goToAndStop(0, true);
 
       const newFavorites = favorites.filter(
         (favorite) => favorite.slug !== policy?.slug,
@@ -50,10 +52,17 @@ export function ButtonPolicyFavorite({ policy }: Props) {
   useEffect(() => {
     if (!policy || !animationItem) return;
 
-    if (favorites.some((favorite) => favorite.slug === policy.slug)) {
+    const initial = initialRef.current;
+
+    if (
+      favorites.some((favorite) => favorite.slug === policy.slug) &&
+      !initial
+    ) {
       goToAndStop(animationItem.totalFrames - 1, true);
       setIsFavirote(true);
     }
+
+    initialRef.current = true;
   }, [policy, favorites, animationItem]);
 
   return (

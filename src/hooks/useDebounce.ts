@@ -7,7 +7,7 @@ export function useDebounce(value: string, delay = 500) {
     if (value.length < 3) return setDebouncedValue('');
     const handler = setTimeout(() => setDebouncedValue(value), delay);
 
-    return () => clearTimeout(handler); // limpa timeout se o valor mudar antes do delay
+    return () => clearTimeout(handler);
   }, [value, delay]);
 
   return debouncedValue;

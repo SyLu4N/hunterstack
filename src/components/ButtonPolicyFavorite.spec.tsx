@@ -1,5 +1,3 @@
-import { useEffect } from 'react'; // ← Adicionar esta importação
-
 import { useFavorites } from '@/hooks/useFavorites';
 import { fireEvent, render, cleanup } from '@testing-library/react';
 import { Mock, vi } from 'vitest';
@@ -10,7 +8,7 @@ const fakePolicy = { slug: 'fake-policy', title: 'Política Fake' } as any;
 
 vi.mock('@/hooks/useFavorites');
 vi.mock('use-sound', () => ({
-  default: () => [vi.fn(), { stop: vi.fn() }], // ← Mock corrigido
+  default: () => [vi.fn(), { stop: vi.fn() }],
 }));
 
 vi.mock('./ui/button', () => ({
@@ -21,24 +19,13 @@ vi.mock('./ui/button', () => ({
   ),
 }));
 
-vi.mock('@lottiefiles/dotlottie-react', () => ({
-  DotLottieReact: vi.fn().mockImplementation(({ dotLottieRefCallback }) => {
-    useEffect(() => {
-      const mockPlayer = {
-        play: vi.fn(),
-        stop: vi.fn(),
-        setFrame: vi.fn(),
-        isPlaying: false,
-        totalFrames: 10,
-      };
-      dotLottieRefCallback(mockPlayer);
-
-      return () => {
-        dotLottieRefCallback(null);
-      };
-    }, []);
-
-    return null;
+vi.mock('lottie-react', () => ({
+  useLottie: () => ({
+    View: <div data-testid="lottie" />,
+    play: vi.fn(),
+    goToAndStop: vi.fn(),
+    playSegments: vi.fn(),
+    animationItem: { totalFrames: 50, goToAndStop: vi.fn() },
   }),
 }));
 
@@ -54,12 +41,12 @@ describe('ButtonPolicyFavorite', () => {
   });
 
   afterEach(() => {
-    cleanup(); // ← Limpa após cada teste
+    cleanup();
     vi.clearAllMocks();
   });
 
   afterAll(() => {
-    vi.resetAllMocks(); // ← Reseta todos os mocks após todos os testes
+    vi.resetAllMocks();
   });
 
   it('Adiciona aos favoritos', () => {

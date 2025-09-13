@@ -59,5 +59,5 @@ export function extractHighlightFromPolicy(
   const end = Math.min(fieldWithMatch.length, start + length);
   const snippet = fieldWithMatch.slice(start, end);
 
-  return highlightMatch(snippet, query); // ✅ função normal, não hook
+  return highlightMatch(snippet, query);
 }

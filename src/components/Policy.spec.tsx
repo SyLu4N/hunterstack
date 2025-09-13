@@ -13,6 +13,19 @@ vi.mock('@/hooks/useFavorites', () => ({
   }),
 }));
 
+vi.mock('lottie-react', () => ({
+  useLottie: () => ({
+    View: <div data-testid="lottie" />,
+    play: vi.fn(),
+    goToAndStop: vi.fn(),
+    playSegments: vi.fn(),
+    animationItem: {
+      totalFrames: 50,
+      goToAndStop: vi.fn(),
+    },
+  }),
+}));
+
 describe('PolicyTest', () => {
   const fakePolicy = {
     title: 'Política de Privacidade',
