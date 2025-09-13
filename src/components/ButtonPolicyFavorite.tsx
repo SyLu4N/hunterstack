@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { Policy } from '@/@types/Policy';
 import { useFavorites } from '@/hooks/useFavorites';
-import { useLottie } from 'lottie-react';
+import { LottieOptions, useLottie } from 'lottie-react';
 import useSound from 'use-sound';
 
 import { Button } from './ui/button';
@@ -20,13 +20,13 @@ export function ButtonPolicyFavorite({ policy }: Props) {
 
   const [playOn] = useSound('/sounds/teste.wav');
 
-  const options = {
+  const options: LottieOptions<'svg'> = {
     animationData: heart,
     loop: false,
     autoplay: false,
   };
 
-  const { View, play, goToAndStop, playSegments } = useLottie(options);
+  const { View, play, goToAndStop, animationItem } = useLottie(options);
 
   function handleFavorite() {
     if (isFavorite) {
@@ -48,13 +48,13 @@ export function ButtonPolicyFavorite({ policy }: Props) {
   }
 
   useEffect(() => {
-    if (!policy) return;
+    if (!policy || !animationItem) return;
 
     if (favorites.some((favorite) => favorite.slug === policy.slug)) {
-      playSegments([59, 59]);
+      goToAndStop(animationItem.totalFrames - 1, true);
       setIsFavirote(true);
     }
-  }, [policy, favorites]);
+  }, [policy, favorites, animationItem]);
 
   return (
     <Button
