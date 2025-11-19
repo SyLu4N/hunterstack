@@ -22,7 +22,7 @@ export async function generateMetadata(
   const previousKeywords = (await parent).keywords || [];
 
   return {
-    title: 'Hunterstack.io | ' + policy.title,
+    title: 'LOGOTIPO | ' + policy.title,
     description: policy.summary,
 
     keywords: [policy.title, ...policy.title.split(' '), ...previousKeywords],
@@ -30,11 +30,9 @@ export async function generateMetadata(
     openGraph: {
       title: policy.title,
       description: policy.summary,
-      siteName: 'Hunterstack.io',
     },
 
     creator: 'Luan Simões',
-    applicationName: 'Hunterstack.io',
   };
 }
 

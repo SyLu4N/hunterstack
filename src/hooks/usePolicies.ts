@@ -1,13 +1,12 @@
 import { Policy } from '@/@types/Policy';
 import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
-import { apiServer } from '@/services/api';
+import { api } from '@/services/api';
 import { createValueArrayFromProps } from '@/utils/createValueArrayFromProps';
 import {
   useQuery,
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 type GetPolicesResponse = {
   totalCount: number;
@@ -24,8 +23,6 @@ export type QueryParamsPolicies = {
 };
 
 export async function getPolicies(props: QueryParamsPolicies) {
-  const api = apiServer();
-
   const { page, category, title, slug, orderByCreated, search } = props;
 
   const params: Record<string, string | number> = {};
@@ -64,25 +61,8 @@ export function usePolicies(
     staleTime: STALE_TIME_24HRS_QUERY,
 
     queryFn: async () => {
-      try {
-        const response = await getPolicies(props);
-
-        return response;
-      } catch {
-        const message = 'Algo deu errado, tente novamente mais tarde';
-
-        toast.error(message, {
-          position: 'top-right',
-          style: {
-            background: 'var(--toast-bg)',
-            borderColor: 'var(--toast-border)',
-            color: 'var(--toast-error)',
-          },
-          duration: 5000,
-        });
-
-        return { policies: [], totalCount: 0 };
-      }
+      const response = await getPolicies(props);
+      return response;
     },
 
     ...configs,

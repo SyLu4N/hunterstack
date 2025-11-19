@@ -10,6 +10,7 @@ import {
   extractHighlightFromPolicy,
   highlightMatch,
 } from '@/utils/extractHighlightFromPolicy';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -79,7 +80,7 @@ export function Search({ q }: Props) {
       {open && data && data?.policies?.length > 0 && (
         <div className="bg-background-700 px-6 py-5 scroll w-full max-h-[600px] overflow-y-auto shadow-md rounded-b-3xl absolute top-[100%]">
           {data.policies.map((policy, index) => (
-            <a
+            <Link
               key={policy.slug}
               href={`/${policy.category.slug}/${policy.slug}`}
             >
@@ -92,7 +93,7 @@ export function Search({ q }: Props) {
               </h2>
 
               <p>{extractHighlightFromPolicy(policy, debouncedValue, 150)}</p>
-            </a>
+            </Link>
           ))}
         </div>
       )}

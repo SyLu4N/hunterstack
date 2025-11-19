@@ -14,6 +14,10 @@ vi.mock('@/hooks/useFavorites', () => ({
   useFavorites: () => ({ favorites: [] }),
 }));
 
+vi.mock('./UserNav', () => ({
+  UserNav: () => <div aria-label="user-nav-mock" />,
+}));
+
 export function renderWithSidebar(ui: ReactNode) {
   return render(<SidebarProvider>{ui}</SidebarProvider>);
 }

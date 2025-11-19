@@ -1,4 +1,4 @@
-import { apiServer } from '@/services/api';
+import { api } from '@/services/api';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { vi } from 'vitest';
@@ -23,7 +23,7 @@ describe('ButtonPolicyExport component', () => {
   const mockApiGet = vi.fn();
 
   beforeEach(() => {
-    (apiServer as any).mockReturnValue({
+    (api as any).mockReturnValue({
       get: mockApiGet,
     });
     (toast.loading as any) = vi.fn().mockReturnValue('toast-id');

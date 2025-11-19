@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Policy } from '@/@types/Policy';
+import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
+import { api } from '@/services/api';
 import { LottieOptions, useLottie } from 'lottie-react';
 import useSound from 'use-sound';
 
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export function ButtonPolicyFavorite({ policy }: Props) {
+  const { user } = useAuth();
   const { favorites, setFavorites } = useFavorites();
 
   const [isFavorite, setIsFavirote] = useState(false);
@@ -30,22 +33,43 @@ export function ButtonPolicyFavorite({ policy }: Props) {
 
   const initialRef = useRef(false);
 
-  function handleFavorite() {
+  async function handleFavorite() {
+    if (!policy) return;
+
     if (isFavorite) {
       goToAndStop(0, true);
 
       const newFavorites = favorites.filter(
-        (favorite) => favorite.slug !== policy?.slug,
+        (favorite) => favorite.policy.slug !== policy?.slug,
       );
 
       setFavorites(newFavorites);
       setIsFavirote(false);
+
+      if (user) await api.delete(`/favorites/${policy?.id}`);
     } else {
       play();
       playOn();
 
-      setFavorites([...favorites, policy!]);
+      const newFavorite = {
+        policy: {
+          id: policy.id,
+          slug: policy.slug,
+          title: policy.title,
+
+          category: {
+            name: policy.category.name,
+            slug: policy.category.slug,
+          },
+        },
+
+        createdAt: new Date(),
+      };
+
+      setFavorites([...favorites, newFavorite!]);
       setIsFavirote(true);
+
+      if (user) await api.post(`/favorites`, { policyId: policy?.id });
     }
   }
 
@@ -55,7 +79,7 @@ export function ButtonPolicyFavorite({ policy }: Props) {
     const initial = initialRef.current;
 
     if (
-      favorites.some((favorite) => favorite.slug === policy.slug) &&
+      favorites.some((favorite) => favorite.policy.slug === policy.slug) &&
       !initial
     ) {
       goToAndStop(animationItem.totalFrames - 1, true);

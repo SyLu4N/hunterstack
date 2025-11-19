@@ -1,3 +1,4 @@
-const FAVORITES_KEY = 'favorites';
+const FAVORITES_KEY = 'FAVORITES_STORAGE';
+const AUTH_KEY = 'AUTH_NEXT';
 
-export { FAVORITES_KEY };
+export { FAVORITES_KEY, AUTH_KEY };

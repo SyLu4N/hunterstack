@@ -1,6 +1,6 @@
 import { Policy } from '@/@types/Policy';
 import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
-import { apiServer } from '@/services/api';
+import { api } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -13,8 +13,6 @@ type QueryProps = {
 };
 
 export async function getPolicy(slug: string) {
-  const api = apiServer();
-
   const { data } = await api.get<Policy>(`/policies/${slug}`);
   return data;
 }
@@ -34,7 +32,7 @@ export function usePolicy(slug: string): QueryProps {
       } catch (error: any) {
         let message = 'Algo deu errado, tente novamente mais tarde';
 
-        if (error?.response?.data?.message && error.status === 404) {
+        if (error?.response?.data?.message && error?.status === 404) {
           message = error.response.data.message;
         }
 

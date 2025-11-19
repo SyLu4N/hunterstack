@@ -13,10 +13,9 @@ import type { Metadata } from 'next';
 import Provider from './_provider';
 
 export const metadata: Metadata = {
-  title: 'Hunterstack.io',
+  title: 'LOGOTIPO',
   description:
     'Descubra tudo sobre segurança da informação, privacidade e proteção de dados. Conteúdo atualizado e revisado pela Inteligência Artificial.',
-  applicationName: 'hunterstack.io',
   keywords: [
     'segurança da informação',
     'privacidade de dados',
@@ -34,17 +33,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    title: 'Hunterstack.io | Segurança da informação a um clique de distância.',
+    title: 'Segurança da informação a um clique de distância.',
     description:
       'Saiba tudo sobre a segurança da informação, tópicos atualizados e revisados pela Inteligencia Artificial.',
-    siteName: 'Hunterstack.io',
-
-    images: [
-      {
-        url: 'https://www.hunterstack.io/hubfs/Logo-white.png',
-        alt: 'Hunterstack.io Logotipo',
-      },
-    ],
   },
 
   creator: 'Luan Simões',

@@ -1,6 +1,6 @@
 import { Category } from '@/@types/Category';
 import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
-import { apiServer } from '@/services/api';
+import { api } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -18,8 +18,6 @@ type QueryProps = {
 };
 
 export async function getCategories(page = 1) {
-  const api = apiServer();
-
   const { data } = await api.get(`/categories?page=${page}`);
   return data;
 }
@@ -36,8 +34,12 @@ export function useCategories(page = 1): QueryProps {
         const response = await getCategories(page);
 
         return response;
-      } catch {
-        const message = 'Algo deu errado, tente novamente mais tarde';
+      } catch (error: any) {
+        let message = 'Algo deu errado, tente novamente mais tarde';
+
+        if (error?.response?.data?.message && error?.status !== 500) {
+          message = error.response.data.message;
+        }
 
         toast.error(message, {
           position: 'top-right',

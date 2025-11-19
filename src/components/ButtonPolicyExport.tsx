@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { RxDownload } from 'react-icons/rx';
 
 import { Policy } from '@/@types/Policy';
-import { apiServer } from '@/services/api';
+import { api } from '@/services/api';
 import { Loader2Icon } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -15,8 +15,6 @@ interface Props {
 }
 
 export function ButtonPolicyExport({ policy }: Props) {
-  const api = apiServer();
-
   const [isLoadingExportPdf, setIsLoadingExportPdf] = useState(false);
 
   async function exportPolicy() {
@@ -37,10 +35,14 @@ export function ButtonPolicyExport({ policy }: Props) {
       window.URL.revokeObjectURL(url);
 
       toast.success('Política exportada com sucesso!', { id: isLoadingToast });
-    } catch {
-      toast.error('Algo deu errado, tente novamente mais tarde', {
-        id: isLoadingToast,
-      });
+    } catch (error: any) {
+      let message = 'Algo deu errado, tente novamente mais tarde';
+
+      if (error?.response?.data?.message && error?.status !== 500) {
+        message = error.response.data.message;
+      }
+
+      toast.error(message, { id: isLoadingToast });
     } finally {
       setIsLoadingExportPdf(false);
     }

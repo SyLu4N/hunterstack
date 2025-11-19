@@ -3,6 +3,7 @@
 import { Fragment, useEffect } from 'react';
 
 import { QueryParamsPolicies, usePolicies } from '@/hooks/usePolicies';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 import { EmptyPolicy } from './EmptyPolicy';
@@ -31,6 +32,14 @@ export function Policies({ props }: Props) {
   const policies = data?.policies || [];
   const totalCount = data?.totalCount || 0;
 
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.35 },
+    },
+  };
   useEffect(() => {
     if (isMobile) {
       setOpenMobile(false);
@@ -73,21 +82,31 @@ export function Policies({ props }: Props) {
         {policies.map((policy, index) => (
           <Fragment key={policy.slug}>
             {index > 0 && (
-              <div className="bg-background-400 w-full h-[1px] rounded-full my-6" />
+              <motion.div
+                className="bg-background-400 w-full h-[1px] rounded-full my-6"
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.2 }}
+              />
             )}
 
             <Link href={`/${policy.category.slug}/${policy.slug}`}>
-              <div
+              <motion.div
                 className={`flex flex-col gap-2 ${!props.category && 'mt-12'}`}
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.2 }}
               >
                 <h2 className="text-3xl md:text-4xl font-bold">
                   {policy.title}
                 </h2>
 
-                <p className="text-sm md:text-md">{policy.summary} </p>
+                <p className="text-sm md:text-md">{policy.summary}</p>
 
                 <TimeAndSource date={policy.createdAt} source={policy.source} />
-              </div>
+              </motion.div>
             </Link>
           </Fragment>
         ))}
