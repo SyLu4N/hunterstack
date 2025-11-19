@@ -1,4 +1,6 @@
 import '@/styles/globals.css';
+import { Suspense } from 'react';
+
 import { AppSidebar } from '@/components/AppSideBar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
@@ -57,18 +59,20 @@ export default async function RootLayout({
   return (
     <html lang="pt-br">
       <body>
-        <Provider>
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <SidebarProvider>
-              <AppSidebar />
+        <Suspense fallback={null}>
+          <Provider>
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              <SidebarProvider>
+                <AppSidebar />
 
-              <main className="w-full">
-                <SidebarTrigger className="text-white ml-2 sticky top-4 hover:bg-background-400 p-2 my-4" />
-                <div className="mx-6 md:mx-24 mb-4">{children}</div>
-              </main>
-            </SidebarProvider>
-          </HydrationBoundary>
-        </Provider>
+                <main className="w-full">
+                  <SidebarTrigger className="text-white ml-2 sticky top-4 hover:bg-background-400 p-2 my-4" />
+                  <div className="mx-6 md:mx-24 mb-4">{children}</div>
+                </main>
+              </SidebarProvider>
+            </HydrationBoundary>
+          </Provider>
+        </Suspense>
       </body>
     </html>
   );
