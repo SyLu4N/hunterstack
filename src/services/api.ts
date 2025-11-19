@@ -12,6 +12,8 @@ api.interceptors.response.use(
     const silent = error.config.silent || false;
     const status = error?.response?.status;
 
+    console.log(error);
+
     if (!silent && status !== 401) {
       let message = 'Algo deu errado, tente novamente mais tarde';
 
