@@ -42,32 +42,37 @@ export function AuthProvider({ children }: authProvider) {
     const code = searchParams.get('code');
     if (!code) return;
 
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const { data } = await api.get<ResponseAuth>(`/auth/github/${code}`);
+      const { data } = await api.get<ResponseAuth>(`/auth/github/${code}`);
 
-    const { token, user } = data;
+      const { token, user } = data;
 
-    setAuth(token);
-    setUser(user);
+      setAuth(token);
+      setUser(user);
 
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete('code');
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete('code');
 
-    const newUrl = `${pathname}?${params.toString()}`;
-    rout.replace(newUrl, { scroll: false });
-
-    setIsLoading(false);
+      const newUrl = `${pathname}?${params.toString()}`;
+      rout.replace(newUrl, { scroll: false });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function validTokenAndSetUser() {
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const response = api.get('me');
-    const { data } = await response;
+      const response = api.get('me');
+      const { data } = await response;
 
-    setUser(data.user);
-    setIsLoading(false);
+      setUser(data.user);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function signOut() {

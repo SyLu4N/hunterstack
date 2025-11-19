@@ -34,21 +34,24 @@ export function SidebarGroupFavorites() {
     if (page === 1) return;
 
     async function loadMore() {
-      setIsLoading(true);
+      try {
+        setIsLoading(true);
 
-      const { data } = await api.get<FavoritesFetchData>(
-        `/favorites?page=${page}`,
-      );
+        const { data } = await api.get<FavoritesFetchData>(
+          `/favorites?page=${page}`,
+        );
 
-      const merged = [
-        ...favorites,
-        ...data.favorites.filter(
-          (f) => !favorites.some((x) => x.policy.slug === f.policy.slug),
-        ),
-      ];
+        const merged = [
+          ...favorites,
+          ...data.favorites.filter(
+            (f) => !favorites.some((x) => x.policy.slug === f.policy.slug),
+          ),
+        ];
 
-      setFavorites(merged);
-      setIsLoading(false);
+        setFavorites(merged);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     loadMore();

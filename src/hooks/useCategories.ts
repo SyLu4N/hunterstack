@@ -2,7 +2,6 @@ import { Category } from '@/@types/Category';
 import { STALE_TIME_24HRS_QUERY } from '@/constants/revalidateTimeReactQuery';
 import { api } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 type GetCategoriesResponse = {
   categories: Category[];
@@ -30,29 +29,8 @@ export function useCategories(page = 1): QueryProps {
     staleTime: STALE_TIME_24HRS_QUERY,
 
     queryFn: async () => {
-      try {
-        const response = await getCategories(page);
-
-        return response;
-      } catch (error: any) {
-        let message = 'Algo deu errado, tente novamente mais tarde';
-
-        if (error?.response?.data?.message && error?.status !== 500) {
-          message = error.response.data.message;
-        }
-
-        toast.error(message, {
-          position: 'top-right',
-          style: {
-            background: 'var(--toast-bg)',
-            borderColor: 'var(--toast-border)',
-            color: 'var(--toast-error)',
-          },
-          duration: 5000,
-        });
-
-        return { categories: [], totalCount: 0 };
-      }
+      const response = await getCategories(page);
+      return response;
     },
   });
 }
