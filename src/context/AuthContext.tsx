@@ -58,6 +58,12 @@ export function AuthProvider({ children }: authProvider) {
       const newUrl = `${pathname}?${params.toString()}`;
       rout.replace(newUrl, { scroll: false });
     } finally {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete('code');
+
+      const newUrl = `${pathname}?${params.toString()}`;
+      rout.replace(newUrl, { scroll: false });
+
       setIsLoading(false);
     }
   }
