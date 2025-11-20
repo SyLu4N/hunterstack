@@ -17,7 +17,7 @@ interface Props {
 
 export function ButtonPolicyFavorite({ policy }: Props) {
   const { user } = useAuth();
-  const { favorites, setFavorites } = useFavorites();
+  const { favorites, setFavorites, totalCount } = useFavorites();
 
   const [isFavorite, setIsFavirote] = useState(false);
 
@@ -45,6 +45,7 @@ export function ButtonPolicyFavorite({ policy }: Props) {
 
       setFavorites(newFavorites);
       setIsFavirote(false);
+      totalCount.current -= 1;
 
       if (user) await api.delete(`/favorites/${policy?.id}`);
     } else {
@@ -74,14 +75,14 @@ export function ButtonPolicyFavorite({ policy }: Props) {
   }
 
   useEffect(() => {
-    if (!policy || !animationItem) return;
+    if (!policy || !animationItem || !favorites.length) return;
 
     const initial = initialRef.current;
+    const alreadyFavorite = favorites.some(
+      (favorite) => favorite.policy.slug === policy.slug,
+    );
 
-    if (
-      favorites.some((favorite) => favorite.policy.slug === policy.slug) &&
-      !initial
-    ) {
+    if (alreadyFavorite && !initial) {
       goToAndStop(animationItem.totalFrames - 1, true);
       setIsFavirote(true);
     }

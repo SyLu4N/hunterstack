@@ -53,20 +53,29 @@ describe('ButtonPolicyFavorite', () => {
     const { getByTestId } = render(
       <ButtonPolicyFavorite policy={fakePolicy} />,
     );
+
     fireEvent.click(getByTestId('mock-button'));
-    expect(setFavorites).toHaveBeenCalledWith([fakePolicy]);
+
+    const favoriteFake = {
+      policy: fakePolicy,
+      createdAt: new Date(),
+    };
+
+    expect(setFavorites).toHaveBeenCalledWith([favoriteFake]);
   });
 
   // ---
 
   it('Remove dos favoritos', () => {
     (useFavorites as Mock).mockReturnValue({
-      favorites: [fakePolicy],
+      favorites: [{ policy: fakePolicy, createdAt: new Date() }],
       setFavorites,
     });
+
     const { getByTestId } = render(
       <ButtonPolicyFavorite policy={fakePolicy} />,
     );
+
     fireEvent.click(getByTestId('mock-button'));
     expect(setFavorites).toHaveBeenCalledWith([]);
   });
